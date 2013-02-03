@@ -180,6 +180,10 @@ bool Args::ToGType(Handle<Value> v, GIArgument *arg, GIArgInfo *info, GITypeInfo
             g_value_unset(&gvalue);
             return true;
         }
+		if (interface_type == GI_INFO_TYPE_ENUM) {
+            arg->v_int64 = v->ToInteger()->Value();
+            return true;
+        }
     }
     
     return false;
