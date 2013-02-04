@@ -145,7 +145,7 @@ v8::Handle<v8::Value> Func::CallAndGetPtr(GObject *obj, GIFunctionInfo *info, co
         GIDirection dir = g_arg_info_get_direction(arg);
 
         if(dir == GI_DIRECTION_IN || dir == GI_DIRECTION_INOUT) {
-            if(!Args::ToGType(args[real_arg_idx], &in_args[in_c], arg, NULL, FALSE)) {
+            if(!Args::ToGType(args[real_arg_idx], &in_args[in_c], arg, arg_type_info, FALSE)) {
                 gchar *instance_desc = Util::utf8StringFromValue(args[real_arg_idx]);
                 gchar *exc_msg = g_strdup_printf("Failed to convert argument %d \"%s\" to GI Type tag \"%s\"",
                                                  in_c, instance_desc, g_type_tag_to_string(g_type_info_get_tag(arg_type_info)));
@@ -155,7 +155,7 @@ v8::Handle<v8::Value> Func::CallAndGetPtr(GObject *obj, GIFunctionInfo *info, co
             in_c++;
         }
         if(dir == GI_DIRECTION_OUT || dir == GI_DIRECTION_INOUT) { 
-            if(!Args::ToGType(args[real_arg_idx], &out_args[out_c], arg, NULL, TRUE)) {
+            if(!Args::ToGType(args[real_arg_idx], &out_args[out_c], arg, arg_type_info, TRUE)) {
                 gchar *instance_desc = Util::utf8StringFromValue(args[real_arg_idx]);
                 gchar *exc_msg = g_strdup_printf("Failed to convert output %d \"%s\" to GI Type tag \"%s\"",
                                                  out_c, instance_desc, g_type_tag_to_string(g_type_info_get_tag(arg_type_info)));
