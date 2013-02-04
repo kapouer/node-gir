@@ -99,20 +99,16 @@ bool Args::ToGType(Handle<Value> v, GIArgument *arg, GIArgInfo *info, GITypeInfo
             }
             return false; 
         }
-        
-        GIArrayType arr_type = g_type_info_get_array_type(info);
-        
+        GIArrayType arr_type = g_type_info_get_array_type(type);
         if(arr_type == GI_ARRAY_TYPE_C) {
-        
+            arg->v_pointer = 0;
+            return true;
         }
         else if(arr_type == GI_ARRAY_TYPE_ARRAY) {
-        
         }
         else if(arr_type == GI_ARRAY_TYPE_PTR_ARRAY) {
-        
         }
         else if(arr_type == GI_ARRAY_TYPE_BYTE_ARRAY) {
-            
         }
         /*
         int l = g_type_info_get_array_length(info);
