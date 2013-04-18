@@ -197,6 +197,13 @@ bool GIRValue::ToGValue(Handle<Value> value, GType type, GValue *v) {
         }
 
         case G_TYPE_POINTER:
+        if(value->IsString()) {
+            GType guessType = g_type_from_name(*String::Utf8Value(value->ToString()));
+            if (guessType != NULL) {
+                g_value_set_gtype(v, guessType);
+                return true;
+            }
+        }
         break;
         
         case G_TYPE_BOXED:
