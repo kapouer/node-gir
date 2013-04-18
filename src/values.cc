@@ -86,7 +86,7 @@ Handle<Value> GIRValue::FromGValue(GValue *v, GIBaseInfo *base_info) {
             return GIRObject::New(G_OBJECT(g_value_get_object(v)), type);
     
         default:
-            return EXCEPTION("GIRValue - conversion of '%s' type not supported");
+            return EXCEPTION(g_strdup_printf("GIRValue - conversion of '%s' type not supported", g_type_name(G_TYPE_FUNDAMENTAL(type))));
     }
 
     return value;
