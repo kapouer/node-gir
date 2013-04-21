@@ -645,7 +645,7 @@ Handle<Value> GIRObject::WatchSignal(const Arguments &args)
     if (args.Length() < 1 || !args[0]->IsString()) {
         return BAD_ARGS("Invalid argument's number or type");
     }
-    bool after = true;
+    bool after = false;
     if (args.Length() > 1 && args[1]->IsBoolean()) {
         after = args[1]->ToBoolean()->IsTrue();
     }
