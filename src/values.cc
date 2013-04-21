@@ -100,7 +100,7 @@ bool GIRValue::ToGValue(Handle<Value> value, GType type, GValue *v) {
         return false;
     }
     
-    g_value_init(v, type);
+    if (G_VALUE_TYPE(v) != type) g_value_init(v, type);
    
     switch (G_TYPE_FUNDAMENTAL(type)) {
         case G_TYPE_INTERFACE:
