@@ -219,6 +219,7 @@ gir.load = function() {
       if (obj[subobj].prototype['__watch_signal__'] != undefined) {
         obj[subobj].prototype._baseEventEmitter_on = obj[subobj].prototype.on;
         obj[subobj].prototype.on = function () {
+					this.setMaxListeners(0);
           //tell gir loaded object to listen for the signal
           this.__watch_signal__(arguments[0]);
           //dispatch normally
