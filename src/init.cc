@@ -6,9 +6,15 @@
 #include "util.h"
 #include "namespace_loader.h"
 
-extern "C" void init (v8::Handle<v8::Object> target) {
-    v8::HandleScope scope;
+using namespace node;
+using namespace v8;
 
-    NODE_SET_METHOD(target, "init", init);
-    gir::NamespaceLoader::Initialize(target);
+extern "C" void 
+init(Handle<Object> target) {
+  HandleScope scope;
+
+  NODE_SET_METHOD(target, "init", g_init); 
+  gir::NamespaceLoader::Initialize(target);
 }
+
+NODE_MODULE(girepository, init);
