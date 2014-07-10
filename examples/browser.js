@@ -1,6 +1,7 @@
 var gir = require('../gir')
- ,  gtk = module.exports = gir.load('Gtk', '3.0')
- ,  WebKit = module.exports = gir.load('WebKit', '3.0');
+  ,  gtk = module.exports = gir.load('Gtk', '3.0')
+  ,  WebKit = module.exports = gir.load('WebKit', '3.0')
+  ,  loop;
 
 gtk.init(0);
 
@@ -8,7 +9,8 @@ var win = new gtk.Window();
 
 win.on('destroy', function() {
   console.log('Window destroyed');
-  gtk.main_quit();
+  clearInterval(loop);
+//  gtk.main_quit();
   process.exit();
 });
 
@@ -22,4 +24,5 @@ sw.add(view);
 win.set_size_request(640, 480);
 win.show_all();
 
-gtk.main();
+//gtk.main();
+loop = setInterval(gtk.main_iteration_do.bind(gtk, false), 0);
