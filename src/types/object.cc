@@ -213,7 +213,7 @@ Handle<Value> GIRObject::ToParams(Handle<Value> val, GParameter** params, int *l
             }
         }
         
-        GValue gvalue = {0,};
+        GValue gvalue = G_VALUE_INIT;
         GType value_type = G_TYPE_INVALID;
         // Determine the best match for property's type
         if (klass) {
@@ -273,7 +273,7 @@ v8::Handle<v8::Value> PropertyGetHandler(v8::Local<v8::String> name, const v8::A
 
             GIPropertyInfo *prop_info = g_object_info_find_property(base_info, *_name);
             GType value_type = G_TYPE_FUNDAMENTAL(pspec->value_type);
-            GValue gvalue = {0,};
+            GValue gvalue = G_VALUE_INIT;
             g_value_init(&gvalue, pspec->value_type);
             g_object_get_property(G_OBJECT(that->obj), *_name, &gvalue);
             Handle<Value> res = GIRValue::FromGValue(&gvalue, prop_info);          
@@ -316,7 +316,7 @@ v8::Handle<v8::Value> PropertySetHandler(v8::Local<v8::String> name, Local< Valu
             debug_printf("SetHandler (Set property) '%s.%s' \n", G_OBJECT_TYPE_NAME(that->obj), *_name);
 
             bool value_is_set = false;
-            GValue gvalue = {0,};
+            GValue gvalue = G_VALUE_INIT;
             value_is_set = GIRValue::ToGValue(value, pspec->value_type, &gvalue);
             g_object_set_property(G_OBJECT(that->obj), *_name, &gvalue);
             GType value_type = G_TYPE_FUNDAMENTAL(pspec->value_type);
@@ -554,7 +554,7 @@ Handle<Value> GIRObject::GetProperty(const Arguments &args)
     
     GParamSpec *spec = g_object_class_find_property(G_OBJECT_GET_CLASS(that->obj), *propname);
 
-    GValue gvalue = {0,};
+    GValue gvalue = G_VALUE_INIT;
     g_value_init(&gvalue, spec->value_type);
     g_object_get_property(G_OBJECT(that->obj), *propname, &gvalue);
     
@@ -585,7 +585,7 @@ Handle<Value> GIRObject::SetProperty(const Arguments &args)
     
     GParamSpec *spec = g_object_class_find_property(G_OBJECT_GET_CLASS(that->obj), *propname);
     
-    GValue gvalue = {0,};
+    GValue gvalue = G_VALUE_INIT;
     if (!GIRValue::ToGValue(args[1], spec->value_type, &gvalue)) {
         return EXCEPTION("Cant convert to JS value to c value");
     }

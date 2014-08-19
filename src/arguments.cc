@@ -3,6 +3,7 @@
 #include "values.h"
 
 #include "types/object.h"
+#include "types/struct.h"
 #include <string.h>
 
 #include <vector>
@@ -105,10 +106,13 @@ bool Args::ToGType(Handle<Value> v, GIArgument *arg, GIArgInfo *info, GITypeInfo
             return true;
         }
         else if(arr_type == GI_ARRAY_TYPE_ARRAY) {
+        
         }
         else if(arr_type == GI_ARRAY_TYPE_PTR_ARRAY) {
+        
         }
         else if(arr_type == GI_ARRAY_TYPE_BYTE_ARRAY) {
+            
         }
         /*
         int l = g_type_info_get_array_length(info);
@@ -167,7 +171,7 @@ bool Args::ToGType(Handle<Value> v, GIArgument *arg, GIArgInfo *info, GITypeInfo
             return true;
         }
         if(g_type_is_a(gtype, G_TYPE_VALUE)) {
-            GValue gvalue = {0,};
+            GValue gvalue = G_VALUE_INIT;
             if(!GIRValue::ToGValue(v, G_TYPE_INVALID, &gvalue)) {
                 return false;
             }
@@ -176,10 +180,17 @@ bool Args::ToGType(Handle<Value> v, GIArgument *arg, GIArgInfo *info, GITypeInfo
             g_value_unset(&gvalue);
             return true;
         }
-		if (interface_type == GI_INFO_TYPE_ENUM) {
+        if (interface_type == GI_INFO_TYPE_ENUM || interface_type == GI_INFO_TYPE_FLAGS) {
             arg->v_int64 = v->ToInteger()->Value();
             return true;
         }
+        if (interface_type == GI_INFO_TYPE_STRUCT) {
+            if(!v->IsObject()) { return false; }
+            GIRStruct *gir_struct = node::ObjectWrap::Unwrap<GIRStruct>(v->ToObject());
+            arg->v_pointer = gir_struct->c_structure;
+            return true;
+        }
+
     }
     
     return false;

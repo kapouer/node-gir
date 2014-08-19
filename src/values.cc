@@ -20,7 +20,7 @@ Handle<Value> GIRValue::FromGValue(GValue *v, GIBaseInfo *base_info) {
     switch (G_TYPE_FUNDAMENTAL(type)) {
         case G_TYPE_CHAR:
             str = new char[2];
-            str[0] = g_value_get_char(v);
+            str[0] = g_value_get_schar(v);
             str[1] = '\0';
             value = String::New(str);
             delete[] str;
@@ -113,7 +113,7 @@ bool GIRValue::ToGValue(Handle<Value> value, GType type, GValue *v) {
         case G_TYPE_CHAR:
         if(value->IsString()) {
             String::Utf8Value str(value);
-            g_value_set_char(v, (*str)[0]);
+            g_value_set_schar(v, (*str)[0]);
             return true;
         }
 

@@ -72,23 +72,25 @@ Handle<Value> GIRStruct::New(const Arguments &args)
         return EXCEPTION("Missed introspection structure info");
     }
    
-    GIBaseInfo *func  = (GIBaseInfo*) g_struct_info_find_method(info, "new");
-    if (func == NULL) {
-        return EXCEPTION("Missed introspection structure constructor info");
-    }
-   
-    GIArgument retval;
-    GITypeInfo *returned_type_info;
-    gint returned_array_length;
-    Func::CallAndGetPtr(NULL, func, args, TRUE, &retval, &returned_type_info, &returned_array_length);
-    
-    if (returned_type_info != NULL)
-        g_base_info_unref(returned_type_info);
-
     GIRStruct *obj = new GIRStruct(info);
+    GIBaseInfo *func  = (GIBaseInfo*) g_struct_info_find_method(info, "new");
+   
+    if (func != NULL) {
+        GIArgument retval;
+        GITypeInfo *returned_type_info;
+        gint returned_array_length;
+        Func::CallAndGetPtr(NULL, func, args, TRUE, &retval, &returned_type_info, &returned_array_length);
+        
+        if (returned_type_info != NULL)
+            g_base_info_unref(returned_type_info);
 
-    /* Set underlying C structure */
-    obj->c_structure = (gpointer) retval.v_pointer;
+
+        /* Set underlying C structure */
+        obj->c_structure = (gpointer) retval.v_pointer;
+    }
+    else {
+        obj->c_structure = g_try_malloc0(g_struct_info_get_size ((GIStructInfo*)info));
+    }
 
     obj->Wrap(args.This());
     PushInstance(obj, args.This());
